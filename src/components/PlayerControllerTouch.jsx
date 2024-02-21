@@ -15,7 +15,7 @@ import { DriftParticlesRight } from "./Particles/drifts/DriftParticlesRight";
 
 import { PointParticle } from "./Particles/drifts/PointParticle";
 
-import { FlameParticles } from "./Particles/flames/FlameParticles";
+import { SmokeParticles } from "./Particles/smoke/SmokeParticles";
 import { useStore } from "./store";
 import { Cylinder } from "@react-three/drei";
 import FakeGlowMaterial from "./ShaderMaterials/FakeGlow/FakeGlowMaterial";
@@ -84,7 +84,7 @@ export const PlayerControllerTouch = ({
   const effectiveBoost = useRef(0);
   const text = useRef();
 
-  const { actions, shouldSlowDown, item, bananas, coins, id, controls, joystickX, driftButton, itemButton } = useStore();
+  const { actions, shouldSlowDown, item, bananas, coins, id, controls, joystickX, driftButton, itemButton, menuButton } = useStore();
   const slowDownDuration = useRef(1500);
 
   useFrame(({ pointer, clock }, delta) => {
@@ -108,6 +108,10 @@ export const PlayerControllerTouch = ({
       0,
       -Math.cos(kartRotation)
     );
+
+    if (menuButton) {
+      actions.setGameStarted(false);
+    }
 
     // mouse steering
 
@@ -493,6 +497,7 @@ export const PlayerControllerTouch = ({
           {/* <FlameParticles isBoosting={isBoosting} /> */}
           <DriftParticlesLeft turboColor={turboColor} scale={scale} />
           <DriftParticlesRight turboColor={turboColor} scale={scale} />
+          <SmokeParticles driftRight={driftRight.current} driftLeft={driftLeft.current} />
           <PointParticle
             position={[-0.6, 0.05, 0.5]}
             png="./particles/circle.png"

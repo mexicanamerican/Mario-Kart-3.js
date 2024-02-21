@@ -15,7 +15,7 @@ import { DriftParticlesRight } from "./Particles/drifts/DriftParticlesRight";
 
 import { PointParticle } from "./Particles/drifts/PointParticle";
 
-import { FlameParticles } from "./Particles/flames/FlameParticles";
+import { SmokeParticles } from "./Particles/smoke/SmokeParticles";
 import { useStore } from "./store";
 import { Cylinder } from "@react-three/drei";
 import FakeGlowMaterial from "./ShaderMaterials/FakeGlow/FakeGlowMaterial";
@@ -86,7 +86,7 @@ export const PlayerControllerGamepad = ({
 
   const { actions, shouldSlowDown, item, bananas, coins, id, controls } = useStore();
   const slowDownDuration = useRef(1500);
-  const { buttonA, buttonB, RB, LB, joystick, select} = useGamepad();
+  const { buttonA, buttonB, RB, LB, joystick, select, start } = useGamepad();
 
   useFrame(({ pointer, clock }, delta) => {
     if (player.id !== id) return;
@@ -109,6 +109,10 @@ export const PlayerControllerGamepad = ({
       0,
       -Math.cos(kartRotation)
     );
+
+    if (start) {
+      actions.setGameStarted(false);
+    }
 
     // mouse steering
 
@@ -541,6 +545,7 @@ export const PlayerControllerGamepad = ({
           {/* <FlameParticles isBoosting={isBoosting} /> */}
           <DriftParticlesLeft turboColor={turboColor} scale={scale} />
           <DriftParticlesRight turboColor={turboColor} scale={scale} />
+          <SmokeParticles driftRight={driftRight.current} driftLeft={driftLeft.current} />
           <PointParticle
             position={[-0.6, 0.05, 0.5]}
             png="./particles/circle.png"
